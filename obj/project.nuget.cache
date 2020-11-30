@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "lX5v2tsh45Calfgn25i/VUA6d1V7NjTILpRURpOdWfuNiqMSLVyf4nAH6JYgn6L301WXcvBkxwkqfQcSTxX0NA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\kubik\\source\\repos\\newTheatre\\newTheatre\\newTheatre.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\kubik\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\kubik\\.nuget\\packages\\sqlite-net-pcl\\1.7.335\\sqlite-net-pcl.1.7.335.nupkg.sha512",
+    "C:\\Users\\kubik\\.nuget\\packages\\sqlitepclraw.bundle_green\\2.0.3\\sqlitepclraw.bundle_green.2.0.3.nupkg.sha512",
+    "C:\\Users\\kubik\\.nuget\\packages\\sqlitepclraw.core\\2.0.3\\sqlitepclraw.core.2.0.3.nupkg.sha512",
+    "C:\\Users\\kubik\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.0.3\\sqlitepclraw.lib.e_sqlite3.2.0.3.nupkg.sha512",
+    "C:\\Users\\kubik\\.nuget\\packages\\sqlitepclraw.provider.dynamic_cdecl\\2.0.3\\sqlitepclraw.provider.dynamic_cdecl.2.0.3.nupkg.sha512",
+    "C:\\Users\\kubik\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512"
+  ],
+  "logs": []
+}
