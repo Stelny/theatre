@@ -14,11 +14,8 @@ namespace newTheatre
             var TheatreDB = new TheatreDB();
             TheatreDB.createTable();
 
-            string url = @"./config.json";
-
-            string json = File.ReadAllText(url);
-
-            var config = JsonConvert.DeserializeObject<ConfigurationFile>(json);
+            var c = new TheatreConfig();
+            var conf = c.conf;
 
             var TheatreCheck = new TheatreCheck();
 
@@ -55,10 +52,13 @@ namespace newTheatre
                         Console.ReadKey();
                         break;
                     case 5:
-                        var mrdat = new TheatreConfig();
-                        mrdat.changeTheatreConfig();
+                        var testik = new TheatreConfig();
+
                         Console.WriteLine("Pro navrácení do menu. Stikněte jakoukoli klávesu");
+                        testik.insertTheatreConfigIssue(12,7,"Nema nic");
+                        testik.save();
                         Console.ReadKey();
+                        
                         break;
                 }
             }
@@ -67,13 +67,15 @@ namespace newTheatre
         public class TheatreConfig 
         {
             public ConfigurationFile conf;
+            public string url;
             public TheatreConfig()
             {
-                string url = @"./config.json";
+                url = @"./config.json";
 
                 string json = File.ReadAllText(url);
 
                 conf = JsonConvert.DeserializeObject<ConfigurationFile>(json);
+
 
             }
 
@@ -81,18 +83,80 @@ namespace newTheatre
             {
 
                 Console.WriteLine(conf.x);
-
+                
                 /* ConfigurationFile a = new ConfigurationFile(10, 10);
                 a.x = 10;
                 Console.WriteLine(a.x);
 
                 Issues b = new Issues();
-                b.text = "mrdat";
+                b.text = "testik";
                 a.issue.Add(b);
 
                 Console.WriteLine(a.issue[0].text);*/
                 
             }
+            /*
+            public void insertTheatreConfig()
+            {
+
+                Issues b = new Issues();
+                b.text = "Test";
+                conf.issue.Add(b);
+
+                foreach (var item in conf.issue)
+                {
+                    Console.WriteLine(item.x);
+                }
+            } */
+            public void changeTheatreConfigX(int x)
+            {
+                conf.x = x;
+            }
+            public void changeTheatreConfigY(int y)
+            {
+                conf.y = y;
+            }
+
+            protected int getLastid()
+            {
+                int countOfColumns  = conf.issue.Count;
+
+                return conf.issue[countOfColumns-1].id;
+                
+            }
+            public void insertTheatreConfigIssue(int x, int y, string text)
+            {
+                int id = getLastid();
+                Issues b = new Issues();
+                b.id = id+1;
+                b.text = text;
+                b.x = x;
+                b.y = y;
+                conf.issue.Add(b);
+            }
+
+            public void save()
+            {
+
+                string json = JsonConvert.SerializeObject(conf);
+
+                File.WriteAllText(url, json);
+                
+
+                
+            }
+            public bool deleteTheatreConfigById(int id)
+            {
+                if (id == 0)
+                {
+                    return false;
+                } else
+                {
+                    return true;
+                }
+            }
+
+
         }
         public class TheatreComponent
         {
@@ -369,10 +433,12 @@ namespace newTheatre
         } 
         public class Issues
             {
+                
                 public int x { get; set; }
 
                 public int y { get; set; }
 
+                public int id;
                 public string text { get; set; }
             }
     }
