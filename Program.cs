@@ -28,8 +28,9 @@ namespace newTheatre
             while (res)
             {
                 Console.Clear();
-                int menuPicker = TheatreCheck.MenuPicker();
+
                 Console.WriteLine("[1] Zobrazení rezervací \n [2] Vytvořit rezervaci \n [3] Zobrazení uživatelských rezervací \n [4] Zobrazení Konfiguračního souboru");
+                int menuPicker = TheatreCheck.MenuPicker();
                 switch (menuPicker)
                 {
                     case 1:
@@ -53,21 +54,54 @@ namespace newTheatre
                         Console.WriteLine("Pro navrácení do menu. Stikněte jakoukoli klávesu");
                         Console.ReadKey();
                         break;
-
+                    case 5:
+                        var mrdat = new TheatreConfig();
+                        mrdat.changeTheatreConfig();
+                        Console.WriteLine("Pro navrácení do menu. Stikněte jakoukoli klávesu");
+                        Console.ReadKey();
+                        break;
                 }
             }
         }
 
-
-        public class TheatreComponent
+        public class TheatreConfig 
         {
-            public void ShowReservationTable()
+            public ConfigurationFile conf;
+            public TheatreConfig()
             {
                 string url = @"./config.json";
 
                 string json = File.ReadAllText(url);
 
-                var conf = JsonConvert.DeserializeObject<ConfigurationFile>(json);
+                conf = JsonConvert.DeserializeObject<ConfigurationFile>(json);
+
+            }
+
+            public void changeTheatreConfig()
+            {
+
+                Console.WriteLine(conf.x);
+
+                /* ConfigurationFile a = new ConfigurationFile(10, 10);
+                a.x = 10;
+                Console.WriteLine(a.x);
+
+                Issues b = new Issues();
+                b.text = "mrdat";
+                a.issue.Add(b);
+
+                Console.WriteLine(a.issue[0].text);*/
+                
+            }
+        }
+        public class TheatreComponent
+        {
+            public void ShowReservationTable()
+            {
+
+                var c = new TheatreConfig();
+                var conf = c.conf;
+
                 var TheatreDB = new TheatreDB();
                 string table = "";
                 bool isTheSame = false;
@@ -139,11 +173,8 @@ namespace newTheatre
             }
             public void showConfig()
             {
-                string url = @"./config.json";
-
-                string json = File.ReadAllText(url);
-
-                var conf = JsonConvert.DeserializeObject<ConfigurationFile>(json);
+                var c = new TheatreConfig();
+                var conf = c.conf;
 
                 Console.WriteLine("Počet sloupců: " + conf.x);
                 Console.WriteLine("Počet řad: " + conf.y);
@@ -189,11 +220,8 @@ namespace newTheatre
                 int result = 5;
                 bool ok = true;
 
-                string url = @"./config.json";
-
-                string json = File.ReadAllText(url);
-
-                var conf = JsonConvert.DeserializeObject<ConfigurationFile>(json);
+                var c = new TheatreConfig();
+                var conf = c.conf;
 
                 while (ok == true)
                 {
@@ -240,11 +268,8 @@ namespace newTheatre
                 string input;
                 int result = 0;
 
-                string url = @"./config.json";
-
-                string json = File.ReadAllText(url);
-
-                var conf = JsonConvert.DeserializeObject<ConfigurationFile>(json);
+                var c = new TheatreConfig();
+                var conf = c.conf;
 
                 bool ok = true;
                 while (ok == true)
@@ -269,10 +294,15 @@ namespace newTheatre
         }
         public class TheatreDB
         {
+            public SQLiteConnection db;
+
+            public TheatreDB()
+            {
+                db = new SQLiteConnection("./data.db");
+            }
             public List<Theatre> getAll()
                                 
             {
-                var db = new SQLiteConnection("./data.db");
                 var result = db.Query<Theatre>("SELECT * FROM Theatre");
                 return result;
             }
@@ -281,7 +311,6 @@ namespace newTheatre
 
             public void createTable()
             {
-                var db = new SQLiteConnection("./data.db");
 
                 db.CreateTable<Theatre>();
             }
@@ -289,7 +318,6 @@ namespace newTheatre
 
             public bool InsertNewReservation(int x, int y,string name ,string email)
             {
-                var db = new SQLiteConnection("./data.db");
                 var _Theatre = new Theatre();
                 _Theatre.x = x;
                 _Theatre.y = y;
@@ -320,15 +348,26 @@ namespace newTheatre
             public string email { get; set; }
         }
 
+  
+
         public class ConfigurationFile
         {
-            public int x { get; set; }
+            public int x;
 
-            public int y { get; set; }
+            public int y;
 
-            public List<issues> issue { get; set; }
+            public List<Issues> issue;
 
-            public class issues
+            public ConfigurationFile(int cX, int cY)
+            {
+                x = cX;
+                y = cY;
+                issue = new List<Issues>();
+            }
+
+           
+        } 
+        public class Issues
             {
                 public int x { get; set; }
 
@@ -336,7 +375,6 @@ namespace newTheatre
 
                 public string text { get; set; }
             }
-        }
     }
 
    
