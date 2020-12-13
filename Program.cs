@@ -22,14 +22,28 @@ namespace newTheatre
             var TheatreComponent = new TheatreComponent();
 
             bool res = true;
+            int num;
             while (res)
             {
                 Console.Clear();
+                int scene_id = SceneConstant.scene_id;
 
-                Console.WriteLine("[1] Zobrazení rezervací \n [2] Vytvořit rezervaci \n [3] Zobrazení uživatelských rezervací \n [4] Zobrazení Konfiguračního souboru");
+                if (scene_id != 0)
+                {
+                    var scene = TheatreDB.getBySceneId(scene_id);
+                    Console.WriteLine("Vybrané představení: " + scene[0].name);
+                } else
+                {
+                    Console.WriteLine("Představení není vybrané"); 
+                }
+
+
+                Console.WriteLine("[1] Zobrazení rezervací \n [2] Vytvořit rezervaci \n [3] Zobrazení uživatelských rezervací \n [4] Zobrazení Konfiguračního souboru \n [5] Výběr představení \n [6] Změnit počet řad \n [7] Změnit počet sedadel");
                 int menuPicker = TheatreCheck.MenuPicker();
                 switch (menuPicker)
+                  
                 {
+                   
                     case 1:
                         TheatreComponent.ShowReservationTable();
                         Console.WriteLine("Pro navrácení do menu. Stikněte jakoukoli klávesu");
@@ -52,14 +66,30 @@ namespace newTheatre
                         Console.ReadKey();
                         break;
                     case 5:
-                        var testik = new TheatreConfig();
-
-                        Console.WriteLine("Pro navrácení do menu. Stikněte jakoukoli klávesu");
-                        testik.insertTheatreConfigIssue(12,7,"Nema nic");
-                        testik.save();
-                        Console.ReadKey();
-                        
+                        scene_id = TheatreCheck.numberCheckByScene();
+                        SceneConstant.scene_id = scene_id;
                         break;
+                    case 6:
+                        num = TheatreCheck.numberCheck();
+                        c.changeTheatreConfigY(num);
+                        c.save();
+                        Console.WriteLine("Pro navrácení do menu. Stikněte jakoukoli klávesu");
+                        Console.ReadKey();
+                        break;
+                    case 7:
+                        num = TheatreCheck.numberCheck();
+                        c.changeTheatreConfigX(num);
+                        c.save();
+                        Console.WriteLine("Pro navrácení do menu. Stikněte jakoukoli klávesu");
+                        Console.ReadKey();
+                        break;
+
+                        /*case 6:
+                            TheatreDB.insertScene("Kocka a dum");
+                            Console.WriteLine("Pro navrácení do menu. Stikněte jakoukoli klávesu");
+                            Console.ReadKey();
+                            break;*/
+
                 }
             }
         }
@@ -79,35 +109,6 @@ namespace newTheatre
 
             }
 
-            public void changeTheatreConfig()
-            {
-
-                Console.WriteLine(conf.x);
-                
-                /* ConfigurationFile a = new ConfigurationFile(10, 10);
-                a.x = 10;
-                Console.WriteLine(a.x);
-
-                Issues b = new Issues();
-                b.text = "testik";
-                a.issue.Add(b);
-
-                Console.WriteLine(a.issue[0].text);*/
-                
-            }
-            /*
-            public void insertTheatreConfig()
-            {
-
-                Issues b = new Issues();
-                b.text = "Test";
-                conf.issue.Add(b);
-
-                foreach (var item in conf.issue)
-                {
-                    Console.WriteLine(item.x);
-                }
-            } */
             public void changeTheatreConfigX(int x)
             {
                 conf.x = x;
@@ -160,6 +161,26 @@ namespace newTheatre
         }
         public class TheatreComponent
         {
+            public void getBasicPicker(object[] Arr)
+            {
+                int x = 0;
+                foreach (var item in Arr)
+                {
+                    Console.WriteLine("[" + x + "] " + item);
+                    x++;
+                }
+            }
+
+            public void getScenesTable()
+            {
+                var db = new TheatreDB();
+                var scenes = db.getAllScenes();
+
+                foreach (var item in scenes)
+                {
+                    Console.WriteLine("[" + item.id + "] " + item.name);
+                }
+            } 
             public void ShowReservationTable()
             {
 
@@ -172,25 +193,37 @@ namespace newTheatre
 
                 for (int i = 1; i < conf.x+1; i++)
                 {
-                    
-                    table += "O";
+                   
                     
                     for (int j = 1; j < conf.y+1; j++)
                     {
                         isTheSame = false;
-                        foreach (var item in TheatreDB.getAll())
+
+
+                        foreach (var a in conf.issue)
                         {
-                            
-                            if (item.x == j && item.y == i)
+                            if (a.x == j && a.y == i)
                             {
-                                table += "X";
+                                table += "T";
                                 isTheSame = true;
-                                
                             }
                         }
+
                         if (isTheSame == false)
                         {
-                            table += "O";
+                            foreach (var item in TheatreDB.getAllBySceneId(SceneConstant.scene_id))
+                            {
+
+                                if (item.x == j && item.y == i)
+                                {
+                                    table += "X";
+                                    isTheSame = true;
+                                }
+                            }
+                            if (isTheSame == false)
+                            {
+                                table += "O";
+                            }
                         }
                         
                     }
@@ -203,13 +236,15 @@ namespace newTheatre
             public void ShowReservation()
             {
                 var theatreDB = new TheatreDB();
-                foreach (var item in theatreDB.getAll())
+                Console.WriteLine("Rezervace");
+                Console.WriteLine("-------------");
+                Console.Write("Email | Jméno | Sloupec | Řada | Představení\n");
+                Console.WriteLine("-------------");
+                foreach (var item in theatreDB.getAllBySceneId(SceneConstant.scene_id))
                 {
-                    Console.WriteLine("Rezervace");
-                    Console.WriteLine("-------------");
-                    Console.Write("Email | Jméno | Sloupec | Řada\n");
-                    Console.WriteLine("-------------");
-                    Console.Write(item.email + " | " + item.name + " | " + item.x + " | " + item.y + "\n");
+   
+                    var scene = theatreDB.getBySceneId(item.scene_id)[0].name;
+                    Console.Write(item.email + " | " + item.name + " | " + item.x + " | " + item.y +" | "+ scene + "\n");
                     Console.WriteLine("-------------");
                 }
             }
@@ -227,7 +262,8 @@ namespace newTheatre
 
                 string name = theatreCheck.nameCheck();
 
-                if (theatreDB.InsertNewReservation(x, y, name, email))
+
+                if (theatreDB.InsertNewReservation(x, y, name, email, SceneConstant.scene_id))
                 {
                     Console.WriteLine("Vaše rezervace byla úspěšně přidána!");
                 } else
@@ -252,6 +288,12 @@ namespace newTheatre
                 }
             }
         }
+
+
+        /* 
+         Input check
+
+         */
         public class TheatreCheck
         {
             public int MenuPicker()
@@ -268,6 +310,38 @@ namespace newTheatre
                 return result;
             }
 
+            public int numberCheckByScene()
+            {
+                string input;
+                bool ok = true;
+                int result = 0;
+
+                var c = new TheatreConfig();
+                var component = new TheatreComponent();
+                var db = new TheatreDB();
+                var conf = c.conf;
+
+                while (ok == true)
+                {
+                    do
+                    {
+
+                        component.getScenesTable();
+                        Console.Write("Vyberte číslo přestavení: ");
+                        input = Console.ReadLine();
+
+                    } while (!int.TryParse(input, out result));
+
+                    var scene = db.getBySceneId(result);
+                    if (scene.Count != 0)
+                    {
+                        ok = false;
+                    }
+
+                }
+                return result;
+            }
+
             public string nameCheck()
             {
                 string input;
@@ -276,6 +350,20 @@ namespace newTheatre
                 input = Console.ReadLine();
 
                 return input;
+            }
+
+          
+            public int numberCheck()
+            {
+                int result = 0;
+                string input;
+                do
+                {
+                    Console.Write("Vyberte číslo: ");
+                    input = Console.ReadLine();
+
+                } while (!int.TryParse(input, out result));
+                return result;
             }
 
             public int numberCheckByLimitX()
@@ -292,7 +380,7 @@ namespace newTheatre
                     do
                     {
                         Console.WriteLine("Sloupec");
-                        Console.WriteLine("Rozmezí 1-" + conf.x);
+                        Console.WriteLine("Rozmezí 0-" + conf.x);
                         Console.Write("Vyberte číslo: ");
                         input = Console.ReadLine();
 
@@ -327,6 +415,7 @@ namespace newTheatre
 
                 return input;
             }
+
             public int numberCheckByLimitY()
             {
                 string input;
@@ -341,7 +430,7 @@ namespace newTheatre
                     do
                     {
                         Console.WriteLine("Řada");
-                        Console.WriteLine("Rozmezí 1-" + conf.y);
+                        Console.WriteLine("Rozmezí 0-" + conf.y);
                         Console.Write("Vyberte číslo: ");
                         input = Console.ReadLine();
 
@@ -356,14 +445,24 @@ namespace newTheatre
                 return result;
             }
         }
+
+        /*
+         Database methods
+         */
         public class TheatreDB
         {
+
+            /* DB */
             public SQLiteConnection db;
 
+
+            /* Constructor */
             public TheatreDB()
             {
                 db = new SQLiteConnection("./data.db");
             }
+
+            /* Get all from theatre */
             public List<Theatre> getAll()
                                 
             {
@@ -371,22 +470,65 @@ namespace newTheatre
                 return result;
             }
 
+            /* getAllBySceneId */
+            public List<Theatre> getAllBySceneId(int scene_id)
 
+            {
+                var result = db.Query<Theatre>("SELECT * FROM Theatre WHERE scene_id = ?", scene_id);
+                return result;
+            }
+
+            /* getBySceneId */
+            public List<Scene> getBySceneId(int scene_id)
+
+            {
+                var result = db.Query<Scene>("SELECT * FROM Scene WHERE id = ?", scene_id);
+                return result;
+            }
+
+
+            /* getAllScenes */
+            public List<Scene> getAllScenes()
+
+            {
+                var result = db.Query<Scene>("SELECT * FROM Scene");
+                return result;
+            }
+
+
+            /* insertScene */
+            public bool insertScene(string name)
+
+            {
+                var _Scene = new Scene();
+                _Scene.name = name;
+                var result = db.Insert(_Scene);
+                if (result != 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
 
             public void createTable()
             {
 
                 db.CreateTable<Theatre>();
+                db.CreateTable<Scene>();
             }
 
 
-            public bool InsertNewReservation(int x, int y,string name ,string email)
+            public bool InsertNewReservation(int x, int y,string name ,string email, int scene_id)
             {
                 var _Theatre = new Theatre();
                 _Theatre.x = x;
                 _Theatre.y = y;
                 _Theatre.name = name;
                 _Theatre.email = email;
+                _Theatre.scene_id = scene_id;
                 var result = db.Insert(_Theatre);
                 if (result != 0)
                 {
@@ -398,6 +540,8 @@ namespace newTheatre
             }
         }
 
+
+        /* Database Objects*/
         public class Theatre
         {
             [PrimaryKey, AutoIncrement]
@@ -410,15 +554,29 @@ namespace newTheatre
             public string name { get; set; }
 
             public string email { get; set; }
+
+            public int scene_id { get; set; }
         }
 
-  
+
+        public class Scene
+        {
+            [PrimaryKey, AutoIncrement]
+            public int id { get; set; }
+
+            public string name { get; set; }
+        }
+    
+
+        /* Config.json Objects */
 
         public class ConfigurationFile
         {
             public int x;
 
             public int y;
+
+            public object[] error;
 
             public List<Issues> issue;
 
@@ -432,15 +590,22 @@ namespace newTheatre
            
         } 
         public class Issues
-            {
+        {
                 
-                public int x { get; set; }
+            public int x { get; set; }
 
-                public int y { get; set; }
+            public int y { get; set; }
 
-                public int id;
-                public string text { get; set; }
-            }
+            public int id;
+            public string text { get; set; }
+        }
+
+        static class SceneConstant
+        {
+            public static int scene_id;
+        }
+
+
     }
 
    

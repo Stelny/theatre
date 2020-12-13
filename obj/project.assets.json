@@ -280,25 +280,20 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\stellja18\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\kubik\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "R:\\C\\theatre\\newTheatre.csproj",
+      "projectUniqueName": "C:\\Users\\kubik\\source\\repos\\theatre\\newTheatre.csproj",
       "projectName": "newTheatre",
-      "projectPath": "R:\\C\\theatre\\newTheatre.csproj",
-      "packagesPath": "C:\\Users\\stellja18\\.nuget\\packages\\",
-      "outputPath": "R:\\C\\theatre\\obj\\",
+      "projectPath": "C:\\Users\\kubik\\source\\repos\\theatre\\newTheatre.csproj",
+      "packagesPath": "C:\\Users\\kubik\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\kubik\\source\\repos\\theatre\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\"
-      ],
       "configFilePaths": [
-        "C:\\Users\\stellja18\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\kubik\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -309,7 +304,6 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
           "projectReferences": {}
         }
       },
@@ -321,7 +315,6 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
-        "targetAlias": "netcoreapp3.1",
         "dependencies": {
           "Newtonsoft.Json": {
             "target": "Package",
@@ -347,7 +340,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
       }
     }
   }
